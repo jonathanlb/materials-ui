@@ -10,7 +10,7 @@ import { formatDiagnosticsWithColorAndContext } from 'typescript';
 
 export interface NoteEntryProps {
     date: number;
-    edit: boolean;
+    edit?: boolean;
     text: string;
 }
 
