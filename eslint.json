@@ -35,6 +35,8 @@
       {
         "endOfLine": "auto"
       }
-    ]
+    ],
+    "react/destructuring-assignment": "off",
+    "react/no-array-index-key": "off"
   }
 }
