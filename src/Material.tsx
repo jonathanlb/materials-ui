@@ -8,6 +8,7 @@ import {
   CardContent,
   Container,
   Divider,
+  Link,
   TextField,
   Toolbar,
   Typography,
@@ -38,6 +39,12 @@ const useStyles = makeStyles((theme) => ({
 
 export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
   const classes = useStyles();
+  function openTab() {
+    if (!props.edit) {
+      window.open(props.url, '_blank', 'noopener');
+    }
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <TextField
@@ -55,6 +62,7 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
         fullWidth
         InputProps={{ readOnly: !props.edit }}
         value={props.url}
+        onClick={openTab}
       />
 
       <Card>
@@ -94,8 +102,8 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
             </Toolbar>
           </AppBar>
 
-          {(props.notes || []).map((note, i) => (
-            <NoteEntry key={i} date={note.date} text={note.text} />
+          {(props.notes || []).map((note) => (
+            <NoteEntry id={note.id} key={note.id} date={note.date} text={note.text} />
           ))}
         </CardContent>
       </Card>
