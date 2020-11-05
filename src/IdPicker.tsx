@@ -1,5 +1,6 @@
 // styled from https://material-ui.com/components/app-bar/
 import React, { useState } from "react";
+import { useDialog } from "react-st-modal";
 
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
@@ -85,10 +86,15 @@ const useStyles = makeStyles((theme) => ({
 
 export const IdPicker: React.FC<IdPickerProps> = ({ ...props }) => {
   const classes = useStyles();
+  const dialog = useDialog();
   const [filterStr, setFilterStr] = useState<string>("");
 
   function onFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFilterStr(e.target.value.trim());
+  }
+
+  function selectItem(e: React.MouseEvent<any>) {
+    dialog.close(e.currentTarget.innerText);
   }
 
   return (
@@ -122,7 +128,13 @@ export const IdPicker: React.FC<IdPickerProps> = ({ ...props }) => {
                 filterStr.length === 0 || kv[0].includes(filterStr)
             )
             .map((kv: [string, number]) => (
-              <ListItem key={kv[1]}>{kv[0]}</ListItem>
+              <ListItem
+                key={kv[1]}
+                button
+                onClick={props.selected || selectItem}
+              >
+                {kv[0]}
+              </ListItem>
             ))}
         </List>
       </Paper>
@@ -132,6 +144,7 @@ export const IdPicker: React.FC<IdPickerProps> = ({ ...props }) => {
         variant="contained"
         color="primary"
         className={classes.submit}
+        onClick={props.cancelled || (() => dialog.close())}
       >
         Cancel
       </Button>

@@ -14,38 +14,50 @@ export default {
 const Template: Story<MaterialSearchProps> = (args) => (
   <MaterialSearch {...args} />
 );
-const ids = new Map<string, number>();
-[
-  "bluegrass",
-  "blues",
-  "classical",
-  "country",
-  "folk",
-  "jazz",
-  "rock",
-].forEach((s: string, i: number) => ids.set(s, i));
+
+const SEARCH_RESULTS = [
+  {
+    id: 17,
+    keywords: ["documentation", "react"],
+    name: "Stuff to read...",
+    url: "https://material-ui.com/components/text-fields/",
+  },
+  {
+    id: 18,
+    keywords: ["documentation", "react"],
+    name: "More stuff to read...",
+    url: "https://material-ui.com/components/box/",
+  },
+  {
+    id: 97,
+    keywords: ["sports"],
+    name: "Straight from the Source podcast",
+    url:
+      "https://theathletic.com/podcast/102-straight-from-the-source-with-michael-russo/",
+  },
+];
+
+async function searchStub(query: string) {
+  const [mode, term] = query.split('/');
+  switch (mode) {
+    case "search":
+      return JSON.stringify(
+        SEARCH_RESULTS.filter(x => 
+          x.name.includes(term))
+      );
+    case "keyword": 
+      return JSON.stringify(
+        SEARCH_RESULTS.filter(x => 
+          x.keywords.filter(k => k.includes(term)).length > 0)
+    );
+    default: 
+      return "[]";
+  }
+}
 
 export const Primary = Template.bind({});
 Primary.args = {
-  searchResults: [
-    {
-      id: 17,
-      keywords: ["documentation", "react"],
-      name: "Stuff to read...",
-      url: "https://material-ui.com/components/text-fields/",
-    },
-    {
-      id: 18,
-      keywords: ["documentation", "react"],
-      name: "More stuff to read...",
-      url: "https://material-ui.com/components/box/",
-    },
-    {
-      id: 97,
-      keywords: ["sports"],
-      name: "Straight from the Source podcast",
-      url:
-        "https://theathletic.com/podcast/102-straight-from-the-source-with-michael-russo/",
-    },
-  ],
+  searchMode: "search",
+  searchProc: searchStub,
+  searchResults: SEARCH_RESULTS,
 };
