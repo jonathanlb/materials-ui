@@ -5,18 +5,10 @@ export async function getKeyword(id: number): Promise<string> {
   return fetch(`${HOST_PREFIX}/keyword/${id}`).then((r: Response) => r.text());
 }
 
-const _keywords = new Map<string, number>();
+let _keywords = new Map<string, number>();
 export async function getKeywords(): Promise<Map<string, number>> {
   if (_keywords.size === 0) {
-    const text = await fetch(
-      `${HOST_PREFIX}/keyword/search/%/${MAX_ENTRIES}/0`
-    ).then((r: Response) => r.text());
-    const ids = JSON.parse(text) as Array<number>;
-    await Promise.all(
-      ids.map((id: number) =>
-        getKeyword(id).then((keyword: string) => _keywords.set(keyword, id))
-      )
-    );
+    _keywords = await getKeywordsLike("%");
   }
   return _keywords;
 }
@@ -32,6 +24,22 @@ export async function getKeywordIds(): Promise<Map<number, string>> {
   return _keyIds;
 }
 
+export async function getKeywordsLike(
+  term: string
+): Promise<Map<string, number>> {
+  const keywords = new Map<string, number>();
+  const text = await fetch(
+    `${HOST_PREFIX}/keyword/search/${term}/${MAX_ENTRIES}/0`
+  ).then((r: Response) => r.text());
+  const ids: Array<number> = JSON.parse(text);
+  await Promise.all(
+    ids.map((id: number) =>
+      getKeyword(id).then((keyword: string) => keywords.set(keyword, id))
+    )
+  );
+  return keywords;
+}
+
 export async function getKeywordsForMaterial(
   id: number
 ): Promise<Array<string>> {
@@ -39,7 +47,7 @@ export async function getKeywordsForMaterial(
   const text = await fetch(`${HOST_PREFIX}/material/keywords/${id}`).then((r) =>
     r.text()
   );
-  const keyIds = JSON.parse(text) as Array<number>;
+  const keyIds: Array<number> = JSON.parse(text);
   return keyIds.map((keyId) => keywordsI.get(keyId) || "???");
 }
 
