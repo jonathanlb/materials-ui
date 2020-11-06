@@ -1,16 +1,17 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react/types-6-0';
 
-import { Login, LoginProps } from '../Login';
+import { Login, LoginProps } from '../components/Login';
 
 
-export default {
+const loginMeta: Meta = {
   title: 'Login',
   component: Login,
   argTypes: {
     backgroundColor: { control: 'color' },
   },
-} as Meta;
+};
+export default loginMeta;
 
 const Template: Story<LoginProps> = (args) => <Login {...args} />;
 

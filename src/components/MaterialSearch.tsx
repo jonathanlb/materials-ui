@@ -23,7 +23,7 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 
 import { Keyword } from "./Keyword";
 import { MaterialProps } from "./Material";
-import { getBrowseLink } from "./search";
+import { getBrowseLink } from "../search";
 
 export interface MaterialSearchProps {
   getKeywordsForMaterial?: (matID: number) => Promise<Array<string>>;
@@ -135,7 +135,7 @@ export const MaterialSearch: React.FC<MaterialSearchProps> = (
   }
 
   async function updateResults(results: string) {
-    const searchResults = JSON.parse(results) as Array<MaterialProps>;
+    const searchResults: Array<MaterialProps> = JSON.parse(results);
     if (searchState.getKeywordsForMaterial !== undefined) {
       await Promise.all(
         searchResults.map(

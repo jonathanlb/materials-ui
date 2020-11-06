@@ -1,10 +1,9 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Button from "@material-ui/core/Button";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import { Browse } from "./Browse";
-import { Home } from "./Home";
-import { Login } from "./Login";
+import { Browse } from "./components/Browse";
+import { Home } from "./components/Home";
+import { Login } from "./components/Login";
 
 import "./App.css";
 

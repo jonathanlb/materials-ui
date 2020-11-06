@@ -1,15 +1,16 @@
 import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
 
-import { MaterialSearch, MaterialSearchProps } from "../MaterialSearch";
+import { MaterialSearch, MaterialSearchProps } from "../components/MaterialSearch";
 
-export default {
+const searchMeta: Meta = {
   title: "MaterialSearch",
   component: MaterialSearch,
   argTypes: {
     backgroundColor: { control: "color" },
   },
-} as Meta;
+};
+export default searchMeta;
 
 const Template: Story<MaterialSearchProps> = (args) => (
   <MaterialSearch {...args} />

@@ -1,15 +1,16 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react/types-6-0';
 
-import { IdPicker, IdPickerProps } from '../IdPicker';
+import { IdPicker, IdPickerProps } from '../components/IdPicker';
 
-export default {
+const idPickerMeta: Meta = {
   title: 'IdPicker',
   component: IdPicker,
   argTypes: {
     backgroundColor: { control: 'color' },
   },
-} as Meta;
+};
+export default idPickerMeta;
 
 const Template: Story<IdPickerProps> = (args) => <IdPicker {...args} />;
 const ids = new Map<string, number>();

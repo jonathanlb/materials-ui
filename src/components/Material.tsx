@@ -19,7 +19,7 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 import { IdPicker } from "./IdPicker";
 import { Keyword } from "./Keyword";
 import { NoteEntry, NoteEntryProps } from "./NoteEntry";
-import { getKeywords, keyMaterial } from "./keywords";
+import { getKeywords, keyMaterial } from "../keywords";
 
 export interface MaterialProps {
   edit?: boolean;
@@ -44,13 +44,13 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
 
   async function addKeyword() {
     const keywordMap = await getKeywords();
-    const keyword = (await CustomDialog(
+    const keyword: string | undefined = (await CustomDialog(
       <IdPicker ids={keywordMap} titleHint="Keywords" />
-    )) as string;
+    ));
     console.log("keyword", keyword);
     if (keyword !== undefined && !keywords.includes(keyword)) {
       keyMaterial(props.id, keyword);
-      keywords.push(keyword as string);
+      keywords.push(keyword.toString());
       console.log("keywords", keywords);
       setKeywords([...keywords.sort()]); // new array to trigger render
     }

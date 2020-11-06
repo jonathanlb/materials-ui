@@ -1,15 +1,16 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react/types-6-0';
 
-import { NoteEntry, NoteEntryProps } from '../NoteEntry';
+import { NoteEntry, NoteEntryProps } from '../components/NoteEntry';
 
-export default {
+const noteEntry: Meta = {
   title: 'NoteEntry',
   component: NoteEntry,
   argTypes: {
     backgroundColor: { control: 'color' },
   },
-} as Meta;
+};
+export default noteEntry;
 
 const Template: Story<NoteEntryProps> = (args) => <NoteEntry {...args} />;
 

@@ -5,8 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { MaterialSearch, MaterialSearchProps } from "./MaterialSearch";
 import { NavBar } from "./NavBar";
 
-import { getKeywordsForMaterial } from "./keywords";
-import { searchMaterials } from "./search";
+import { getKeywordsForMaterial } from "../keywords";
+import { searchMaterials } from "../search";
 
 export interface HomeProps {}
 

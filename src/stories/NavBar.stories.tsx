@@ -1,15 +1,16 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react/types-6-0';
 
-import { NavBar, NavBarProps } from '../NavBar';
+import { NavBar, NavBarProps } from '../components/NavBar';
 
-export default {
+const navBarMeta: Meta = {
   title: 'NavBar',
   component: NavBar,
   argTypes: {
     backgroundColor: { control: 'color' },
   },
-} as Meta;
+};
+export default navBarMeta;
 
 const Template: Story<NavBarProps> = (args) => <NavBar {...args} />;
 

@@ -1,15 +1,16 @@
 import React from "react";
 import { Story, Meta } from "@storybook/react/types-6-0";
 
-import { Material, MaterialProps } from "../Material";
+import { Material, MaterialProps } from "../components/Material";
 
-export default {
+const materialMeta: Meta = {
   title: "Material",
   component: Material,
   argTypes: {
     backgroundColor: { control: "color" },
   },
-} as Meta;
+};
+export default materialMeta;
 
 const Template: Story<MaterialProps> = (args) => <Material {...args} />;
 

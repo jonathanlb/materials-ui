@@ -1,13 +1,12 @@
+Front end for [materials](https://github.com/jonathanlb/materials) artifact tracking and journaling project.
+
 Use yarn to run.
 
 ## Todos
-- Populate entries.
 - Wire up MaterialSearch with backend.
- - Start with total search.
  - Add keyword filter.
  - Link from search to Material browse.
  - Notate
- - Add keyword
 - NavBar
  - Make pretty
  - Fix header links
