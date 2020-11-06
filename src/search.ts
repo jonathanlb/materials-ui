@@ -1,4 +1,4 @@
-import { MaterialProps } from "./Material";
+import { MaterialProps } from "./components/Material";
 import { getKeywordsLike } from "./keywords";
 import { getNotesLike } from "./notes";
 

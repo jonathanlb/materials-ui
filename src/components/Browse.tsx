@@ -5,7 +5,7 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 import { Material, MaterialProps } from "./Material";
 import { NavBar } from "./NavBar";
 
-import { getMaterial } from "./search";
+import { getMaterial } from "../search";
 
 const useStyles = makeStyles((theme) => ({}));
 
