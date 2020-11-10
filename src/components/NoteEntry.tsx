@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 import {
+  Button,
   Card,
   CardContent,
+  Dialog,
   Divider,
   TextField,
   Typography,
@@ -11,11 +13,16 @@ import {
 
 import { fade, makeStyles } from "@material-ui/core/styles";
 
+export interface NoteTarget {
+  value: string;
+}
+
 export interface NoteEntryProps {
   date: number;
-  edit?: boolean;
+  edit: boolean;
   id: number;
   text: string;
+  target?: NoteTarget;
 }
 
 function formatDate(epochS: number) {
@@ -23,6 +30,16 @@ function formatDate(epochS: number) {
 }
 
 export const NoteEntry: React.FC<NoteEntryProps> = (props: NoteEntryProps) => {
+  const [content, setContent] = useState(props.text);
+
+  function onChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+    const text = e.target.value;
+    if (props.target) {
+      props.target.value = text;
+    }
+    setContent(text);
+  }
+
   function renderContent() {
     if (props.edit) {
       return (
@@ -30,9 +47,11 @@ export const NoteEntry: React.FC<NoteEntryProps> = (props: NoteEntryProps) => {
           label="Markdown Text"
           margin="normal"
           multiline
+          onChange={onChange}
           variant="filled"
           fullWidth
-          value={props.text}
+          type="text"
+          value={content}
         />
       );
     }
@@ -49,3 +68,36 @@ export const NoteEntry: React.FC<NoteEntryProps> = (props: NoteEntryProps) => {
     </Card>
   );
 };
+
+export interface NotateDialogProps extends NoteEntryProps {
+  cancelled: () => void;
+  open: boolean;
+  save: (text: string) => void;
+}
+
+export const NotateDialog: React.FC<NotateDialogProps> = (props: NotateDialogProps) => {
+  const { cancelled, date, edit, id, open, save, text } = props;
+  const textTarget = { value: '' };
+
+  function handleSave(e: React.MouseEvent<any>) {
+    save(textTarget.value);
+  }
+
+  return (
+    <Dialog open={open}>
+      <NoteEntry
+        date={date}
+        edit={edit}
+        id={id}
+        target={textTarget}
+        text={text}
+      />
+      <Card>
+        <CardContent>
+          <Button onClick={handleSave}>Save</Button>
+          <Button onClick={cancelled}>Cancel</Button>
+        </CardContent>
+      </Card>
+    </Dialog>
+  )
+}

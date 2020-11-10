@@ -23,6 +23,8 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 
 import { Keyword } from "./Keyword";
 import { MaterialProps } from "./Material";
+
+import { getKeywords, keyMaterial } from "../keywords";
 import { getBrowseLink } from "../search";
 
 export interface MaterialSearchProps {

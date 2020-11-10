@@ -1,25 +1,17 @@
 // styled from https://material-ui.com/components/app-bar/
 import React, { useState } from "react";
-import { useDialog } from "react-st-modal";
 
-import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import InputBase from "@material-ui/core/InputBase";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Paper from "@material-ui/core/Paper";
-import SearchIcon from "@material-ui/icons/Search";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-
+import {
+  AppBar, Button, Container, Dialog, InputBase, List,
+  ListItem, Paper, Toolbar, Typography } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search"
 import { fade, makeStyles } from "@material-ui/core/styles";
 
 export interface IdPickerProps {
-  cancelled?: () => void;
+  cancelled: () => void;
   ids: Map<string, number>;
-  selected?: () => void;
-  titleHint?: string;
+  selected: (item: string) => void;
+  titleHint: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -86,7 +78,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const IdPicker: React.FC<IdPickerProps> = ({ ...props }) => {
   const classes = useStyles();
-  const dialog = useDialog();
   const [filterStr, setFilterStr] = useState<string>("");
 
   function onFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -94,7 +85,7 @@ export const IdPicker: React.FC<IdPickerProps> = ({ ...props }) => {
   }
 
   function selectItem(e: React.MouseEvent<any>) {
-    dialog.close(e.currentTarget.innerText);
+    props.selected(e.currentTarget.innerText);
   }
 
   return (
@@ -131,7 +122,7 @@ export const IdPicker: React.FC<IdPickerProps> = ({ ...props }) => {
               <ListItem
                 key={kv[1]}
                 button
-                onClick={props.selected || selectItem}
+                onClick={selectItem}
               >
                 {kv[0]}
               </ListItem>
@@ -144,10 +135,29 @@ export const IdPicker: React.FC<IdPickerProps> = ({ ...props }) => {
         variant="contained"
         color="primary"
         className={classes.submit}
-        onClick={props.cancelled || (() => dialog.close())}
+        onClick={props.cancelled}
       >
         Cancel
       </Button>
     </Container>
   );
 };
+
+export interface IdPickerDialogProps extends IdPickerProps {
+  open: boolean;
+}
+
+export const IdPickerDialog: React.FC<IdPickerDialogProps> = (props: IdPickerDialogProps)  => {
+  const { cancelled, ids, open, selected, titleHint} = props;
+
+  return (
+    <Dialog open={open}>
+      <IdPicker 
+        cancelled={cancelled} 
+        ids={ids} 
+        selected={selected} 
+        titleHint={titleHint}
+      />
+    </Dialog>
+  );
+}

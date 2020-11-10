@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { CustomDialog } from "react-st-modal";
 
 import {
   AppBar,
@@ -16,13 +15,15 @@ import {
 
 import { fade, makeStyles } from "@material-ui/core/styles";
 
-import { IdPicker } from "./IdPicker";
+import { IdPickerDialog } from "./IdPicker";
 import { Keyword } from "./Keyword";
-import { NoteEntry, NoteEntryProps } from "./NoteEntry";
-import { getKeywords, keyMaterial } from "../keywords";
+import { NotateDialog, NoteEntry, NoteEntryProps } from "./NoteEntry";
 
 export interface MaterialProps {
+  archiveNote: (text: string) => Promise<number>;
   edit?: boolean;
+  getKeywords: () => Promise<Map<string, number>>;
+  keyMaterial: (matId: number, keyword: string) => Promise<void>;
   keywords?: Array<string>;
   id: number;
   name?: string;
@@ -41,17 +42,37 @@ const useStyles = makeStyles((theme) => ({
 export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
   const classes = useStyles();
   const [keywords, setKeywords] = useState(props.keywords || []);
+  const [pickingKeywords, setPickingKeywords] = useState(false);
+  const [keywordMap, setKeywordMap] = useState(new Map<string, number>());
+  const [notating, setNotating] = useState(false);
+  const [notes, setNotes] = useState(props.notes || []);
 
-  async function addKeyword() {
-    const keywordMap = await getKeywords();
-    const keyword: string | undefined = (await CustomDialog(
-      <IdPicker ids={keywordMap} titleHint="Keywords" />
-    ));
-    console.log("keyword", keyword);
+  async function initAddKeyword() {
+    setKeywordMap(await props.getKeywords());
+    setPickingKeywords(true);
+  }
+
+  function initNotate() {
+    setNotating(true);
+  }
+
+  async function finishNotate(text: string) {
+    const noteId = await props.archiveNote(text);
+    notes.unshift({
+      date: (new Date().getTime()),
+      edit: false,
+      id: noteId,
+      text: text
+    })
+    setNotes([...notes]);
+    setNotating(false);
+  }
+
+  async function finishPickingKeywords(keyword: string) {
+    setPickingKeywords(false);
     if (keyword !== undefined && !keywords.includes(keyword)) {
-      keyMaterial(props.id, keyword);
+      props.keyMaterial(props.id, keyword);
       keywords.push(keyword.toString());
-      console.log("keywords", keywords);
       setKeywords([...keywords.sort()]); // new array to trigger render
     }
   }
@@ -62,10 +83,25 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
     }
   }
 
-  function notate() {}
-
   return (
     <Container component="main" maxWidth="xs">
+      <IdPickerDialog
+        ids={keywordMap}
+        open={pickingKeywords}
+        titleHint="Keywords"
+        cancelled={() => setPickingKeywords(false)}
+        selected={finishPickingKeywords}
+        />
+      <NotateDialog
+        cancelled={() => { setNotating(false) }}
+        date={new Date().getTime()}
+        edit={true}
+        id={-1}
+        open={notating}
+        save={finishNotate}
+        text={""}
+        />
+
       <TextField
         id="material-name"
         label="Name"
@@ -89,7 +125,7 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
           <AppBar position="static">
             <Toolbar>
               <Typography component="h3">Keywords</Typography>
-              <Button className={classes.appBarButton} onClick={addKeyword}>
+              <Button className={classes.appBarButton} onClick={initAddKeyword}>
                 Add
               </Button>
             </Toolbar>
@@ -110,14 +146,15 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
           <AppBar position="static">
             <Toolbar>
               <Typography component="h6">Notes</Typography>
-              <Button className={classes.appBarButton} onClick={notate}>
+              <Button className={classes.appBarButton} onClick={initNotate}>
                 Notate
               </Button>
             </Toolbar>
           </AppBar>
 
-          {(props.notes || []).map((note) => (
+          {notes.map((note) => (
             <NoteEntry
+              edit={false}
               id={note.id}
               key={note.id}
               date={note.date}

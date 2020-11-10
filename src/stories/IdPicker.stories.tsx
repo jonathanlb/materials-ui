@@ -18,6 +18,8 @@ const ids = new Map<string, number>();
 
 export const Primary = Template.bind({});
 Primary.args = {
+  cancelled: () => window.alert('Canceled'),
   ids: ids,
+  selected: (item: string) => window.alert('Selected: ' + item),
   titleHint: 'Genres...',
 };
