@@ -32,7 +32,9 @@ function formatDate(epochS: number) {
 export const NoteEntry: React.FC<NoteEntryProps> = (props: NoteEntryProps) => {
   const [content, setContent] = useState(props.text);
 
-  function onChange(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+  function onChange(
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) {
     const text = e.target.value;
     if (props.target) {
       props.target.value = text;
@@ -75,9 +77,11 @@ export interface NotateDialogProps extends NoteEntryProps {
   save: (text: string) => void;
 }
 
-export const NotateDialog: React.FC<NotateDialogProps> = (props: NotateDialogProps) => {
+export const NotateDialog: React.FC<NotateDialogProps> = (
+  props: NotateDialogProps
+) => {
   const { cancelled, date, edit, id, open, save, text } = props;
-  const textTarget = { value: '' };
+  const textTarget = { value: "" };
 
   function handleSave(e: React.MouseEvent<any>) {
     save(textTarget.value);
@@ -99,5 +103,5 @@ export const NotateDialog: React.FC<NotateDialogProps> = (props: NotateDialogPro
         </CardContent>
       </Card>
     </Dialog>
-  )
-}
+  );
+};
