@@ -7,7 +7,6 @@ import {
   CardContent,
   Container,
   Divider,
-  Link,
   TextField,
   Toolbar,
   Typography,
@@ -41,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
   const classes = useStyles();
+  const [materialName, setMaterialName] = useState(props.name || "");
+  const [materialURL, setMaterialURL] = useState(props.url || "");
   const [keywords, setKeywords] = useState(props.keywords || []);
   const [pickingKeywords, setPickingKeywords] = useState(false);
   const [keywordMap, setKeywordMap] = useState(new Map<string, number>());
@@ -59,11 +60,11 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
   async function finishNotate(text: string) {
     const noteId = await props.archiveNote(text);
     notes.unshift({
-      date: (new Date().getTime()),
+      date: new Date().getTime(),
       edit: false,
       id: noteId,
-      text: text
-    })
+      text,
+    });
     setNotes([...notes]);
     setNotating(false);
   }
@@ -74,6 +75,24 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
       props.keyMaterial(props.id, keyword);
       keywords.push(keyword.toString());
       setKeywords([...keywords.sort()]); // new array to trigger render
+    }
+  }
+
+  function onNameChange(
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) {
+    if (props.edit) {
+      const text = e.target.value;
+      setMaterialName(text);
+    }
+  }
+
+  function onURLChange(
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) {
+    if (props.edit) {
+      const text = e.target.value;
+      setMaterialURL(text);
     }
   }
 
@@ -91,16 +110,18 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
         titleHint="Keywords"
         cancelled={() => setPickingKeywords(false)}
         selected={finishPickingKeywords}
-        />
+      />
       <NotateDialog
-        cancelled={() => { setNotating(false) }}
+        cancelled={() => {
+          setNotating(false);
+        }}
         date={new Date().getTime()}
-        edit={true}
+        edit
         id={-1}
         open={notating}
         save={finishNotate}
-        text={""}
-        />
+        text=""
+      />
 
       <TextField
         id="material-name"
@@ -108,7 +129,8 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
         margin="normal"
         fullWidth
         InputProps={{ readOnly: !props.edit }}
-        value={props.name}
+        value={materialName}
+        onChange={onNameChange}
       />
       <TextField
         id="material-url"
@@ -116,8 +138,9 @@ export const Material: React.FC<MaterialProps> = (props: MaterialProps) => {
         margin="normal"
         fullWidth
         InputProps={{ readOnly: !props.edit }}
-        value={props.url}
+        value={materialURL}
         onClick={openTab}
+        onChange={onURLChange}
       />
 
       <Card>
