@@ -2,9 +2,18 @@
 import React, { useState } from "react";
 
 import {
-  AppBar, Button, Container, Dialog, InputBase, List,
-  ListItem, Paper, Toolbar, Typography } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search"
+  AppBar,
+  Button,
+  Container,
+  Dialog,
+  InputBase,
+  List,
+  ListItem,
+  Paper,
+  Toolbar,
+  Typography,
+} from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 import { fade, makeStyles } from "@material-ui/core/styles";
 
 export interface IdPickerProps {
@@ -84,8 +93,9 @@ export const IdPicker: React.FC<IdPickerProps> = ({ ...props }) => {
     setFilterStr(e.target.value.trim());
   }
 
-  function selectItem(e: React.MouseEvent<any>) {
-    props.selected(e.currentTarget.innerText);
+  function selectItem(e: React.MouseEvent) {
+    // Material-UI pads with spanning crud
+    props.selected(e.currentTarget.innerHTML.replace(/<span.*<\/span>/, ""));
   }
 
   return (
@@ -119,11 +129,7 @@ export const IdPicker: React.FC<IdPickerProps> = ({ ...props }) => {
                 filterStr.length === 0 || kv[0].includes(filterStr)
             )
             .map((kv: [string, number]) => (
-              <ListItem
-                key={kv[1]}
-                button
-                onClick={selectItem}
-              >
+              <ListItem key={kv[1]} button onClick={selectItem}>
                 {kv[0]}
               </ListItem>
             ))}
@@ -147,17 +153,19 @@ export interface IdPickerDialogProps extends IdPickerProps {
   open: boolean;
 }
 
-export const IdPickerDialog: React.FC<IdPickerDialogProps> = (props: IdPickerDialogProps)  => {
-  const { cancelled, ids, open, selected, titleHint} = props;
+export const IdPickerDialog: React.FC<IdPickerDialogProps> = (
+  props: IdPickerDialogProps
+) => {
+  const { cancelled, ids, open, selected, titleHint } = props;
 
   return (
     <Dialog open={open}>
-      <IdPicker 
-        cancelled={cancelled} 
-        ids={ids} 
-        selected={selected} 
+      <IdPicker
+        cancelled={cancelled}
+        ids={ids}
+        selected={selected}
         titleHint={titleHint}
       />
     </Dialog>
   );
-}
+};
